@@ -1,19 +1,21 @@
+import { Button, Row, Col } from 'antd';
+
 const Sort = ({sortByStatus, sortingTasks}) => {
     return (
-        <div className="sort-wrapper">
-            <div className="sort-by-status">
-                <button onClick={() => sortByStatus("All")} >All</button>
-                <button onClick={() => sortByStatus("Done")}>Done</button>
-                <button onClick={() => sortByStatus("Undone")}>UnDone</button>
-            </div>
+        <Row>
+            <Col flex="auto">
+                <Button onClick={() => sortByStatus("All")} >All</Button>
+                <Button onClick={() => sortByStatus("Done")}>Done</Button>
+                <Button onClick={() => sortByStatus("Undone")}>UnDone</Button>
+            </Col>
 
-            <div className="sort-by-date">
+            <Col>
                 <div>Sort By Date</div>
 
-                <button onClick={() => sortingTasks('standart')}>▲</button>
-                <button onClick={() => sortingTasks('reverse')}>▼</button>
-            </div>
-        </div>
+                <Button onClick={() => sortingTasks('standart')}>▲</Button>
+                <Button onClick={() => sortingTasks('reverse')}>▼</Button>
+            </Col>
+        </Row>
     )
 }
 

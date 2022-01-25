@@ -1,4 +1,6 @@
 import { useState } from "react/cjs/react.development";
+import { Checkbox } from 'antd';
+import { Input } from 'antd';
 
 function Task({ task, changeTask, getDone, deleteTask }) {
 
@@ -41,7 +43,7 @@ function Task({ task, changeTask, getDone, deleteTask }) {
     )
 
     const edit = (
-        <input
+        <Input
             value={taskText}
             autoFocus={true}
             onChange={handleOnChange}
@@ -49,17 +51,17 @@ function Task({ task, changeTask, getDone, deleteTask }) {
             onBlur={handleOnBlur}
         >
 
-        </input>
+        </Input>
     )
 
     return (
         <div className="task" key={task.id}>
-            <input
+            <Checkbox
                 type="checkbox"
-                id={task.id}
-                onChange={(e) => getDone(task.id)}
-                checked={task.complete}
-            />
+                // id={task.id}
+                onChange={() => getDone(task.id)}
+                checked={task.complete}>
+            </Checkbox>
 
             {/* <Input placeholder="default size" prefix={<UserOutlined />} /> */}
 

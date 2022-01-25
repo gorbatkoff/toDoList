@@ -1,11 +1,13 @@
+import { Button } from 'antd';
+
 function Page({changeCurrentPage, pageNumber}) {
   return <div>
-    <button
+    <Button
         className="page-button"
         onClick={() => changeCurrentPage(pageNumber)}
     >
         {pageNumber}
-    </button>
+    </Button>
   </div>;
 }
 

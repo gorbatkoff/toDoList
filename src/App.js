@@ -4,8 +4,8 @@ import ToDoForm from './components/ToDoForm';
 import TaskList from './components/TaskList';
 import Sort from './components/Sort';
 
-// import { Pagination } from 'antd';
-// import { Divider } from 'antd';
+import { Pagination } from 'antd';
+import { Divider } from 'antd';
 
 function App() {
 
@@ -109,7 +109,7 @@ function App() {
 
   return (
     <div className="App">
-      {/* <Divider><h3>TO DO LIST</h3></Divider> */}
+      <Divider><h3>TO DO LIST</h3></Divider>
 
       <ToDoForm addTask={addTask} />
 
@@ -130,12 +130,12 @@ function App() {
         changeCurrentPage={changeCurrentPage}
         currentPage={currentPage}
       /> */}
-{/* 
+
       <Pagination
         defaultCurrent={1}
         total={50} 
         onChange={changeCurrentPage}
-      /> */}
+      />
 
     </div>
   );
