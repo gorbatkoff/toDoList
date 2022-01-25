@@ -19,8 +19,6 @@ function App() {
 
   const maxTasks = 5; // Max tasks on any page
 
-  const ksda = 5;
-
   // =-------------------------------------------------------------------------=
 
   useEffect(() => {
