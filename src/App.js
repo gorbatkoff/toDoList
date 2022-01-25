@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import './App.css';
 import Header from './components/Header';
 import ToDoForm from './components/ToDoForm';
 import TaskList from './components/TaskList';
 import Sort from './components/Sort';
-import Pagination from './components/Pagination';
+
+// import { Pagination } from 'antd';
+// import { Divider } from 'antd';
 
 function App() {
 
@@ -46,8 +47,6 @@ function App() {
 
   }, [todos, type, sortType, currentPage]);
 
-
-  // =------------------------------------------------=
   function selectOption(task, type) {
     switch (type) {
       case 'All':
@@ -104,17 +103,13 @@ function App() {
       setTodos([newTask, ...todos]);
     }
   }
-  // =-----------------------------------------------=
-
-  // =-----------------------------------------------= Pagination
-
   function changeCurrentPage(pageNumber) {
     setCurrentPage(pageNumber)
   }
 
   return (
     <div className="App">
-      <Header />
+      {/* <Divider><h3>TO DO LIST</h3></Divider> */}
 
       <ToDoForm addTask={addTask} />
 
@@ -130,11 +125,17 @@ function App() {
         getDone={getDone}
       />
 
-      <Pagination
+      {/* <Pagination
         amountPages={amountPages}
         changeCurrentPage={changeCurrentPage}
         currentPage={currentPage}
-      />
+      /> */}
+{/* 
+      <Pagination
+        defaultCurrent={1}
+        total={50} 
+        onChange={changeCurrentPage}
+      /> */}
 
     </div>
   );

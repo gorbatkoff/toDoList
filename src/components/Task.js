@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react/cjs/react.development";
+import { useState } from "react/cjs/react.development";
 
 function Task({ task, changeTask, getDone, deleteTask }) {
 
@@ -6,29 +6,29 @@ function Task({ task, changeTask, getDone, deleteTask }) {
     const [taskText, setTaskText] = useState(task.task);
     let wasChanged = false;
 
-	function handleOnBlur() {
-		setEditRegime(false)
-		if (!wasChanged)
-			setTaskText(task.task);
-		wasChanged = false;
-	}
+    function handleOnBlur() {
+        setEditRegime(false)
+        if (!wasChanged)
+            setTaskText(task.task);
+        wasChanged = false;
+    }
 
-    const handleOnChange = (e) =>{
+    const handleOnChange = (e) => {
         setTaskText(e.currentTarget.value);
     }
-    
+
     const handleOnClick = () => {
         setEditRegime(true);
     }
 
     const handleKeyDown = (e) => {
-        if(e.keyCode == 13){
+        if (e.keyCode == 13) {
             changeTask(task.id, e.currentTarget.value);
             wasChanged = true;
             e.currentTarget.blur();
         }
 
-        if(e.keyCode == 27){
+        if (e.keyCode == 27) {
             setTaskText(task.task)
             e.currentTarget.blur();
         }
@@ -48,24 +48,23 @@ function Task({ task, changeTask, getDone, deleteTask }) {
             onKeyDown={handleKeyDown}
             onBlur={handleOnBlur}
         >
-        
+
         </input>
     )
 
     return (
         <div className="task" key={task.id}>
-            <input 
-            type="checkbox" 
-            id={task.id} 
-            onChange={(e) => getDone(task.id)} 
-            checked={task.complete}
-            // onChange={() => 1}
+            <input
+                type="checkbox"
+                id={task.id}
+                onChange={(e) => getDone(task.id)}
+                checked={task.complete}
             />
-            
-            {/* <div onClick={changeTask}>{task.task}</div> */}
-            
+
+            {/* <Input placeholder="default size" prefix={<UserOutlined />} /> */}
+
             <div>
-                {editRegime ? edit : look} 
+                {editRegime ? edit : look}
             </div>
 
             <div className="time">
