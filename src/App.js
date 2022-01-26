@@ -1,13 +1,33 @@
 import { useState, useEffect } from 'react';
-import Header from './components/Header';
+// import Header from './components/Header';
 import ToDoForm from './components/ToDoForm';
 import TaskList from './components/TaskList';
 import Sort from './components/Sort';
 
 import { Pagination, Row } from 'antd';
 import { Divider } from 'antd';
+import axios from 'axios';
 
 function App() {
+
+  useEffect(() => {
+    axios.get('https://todo-api-learning.herokuapp.com/v1/tasks/5').then(res => {
+      setAmountPages(Math.ceil(res.data.count / 5));
+      console.log(res.data.tasks)
+      setTodos([...res.data.tasks]);
+    }).catch(res => console.log(res))
+  }, []);
+
+
+
+
+
+
+
+
+
+
+
 
   const [todos, setTodos] = useState([]); // Array of the tasks
   const [currentTasks, setCurrentTasks] = useState(todos); // Copy of array
@@ -53,12 +73,12 @@ function App() {
         return true
 
       case 'Done':
-        if (task.complete)
+        if (task.done)
           return true;
         return false;
 
       case "Undone":
-        if (task.complete)
+        if (task.done)
           return false;
         return true;
     }
@@ -84,21 +104,21 @@ function App() {
     }
   }
   function deleteTask(id) {
-    setTodos([...todos.filter((todo) => todo.id !== id)])
+    setTodos([...todos.filter((todo) => todo.uuid !== id)])
   }
   function getDone(taskId) {
-    setTodos([...todos.map(item => item.id === taskId ? { ...item, complete: !item.complete } : item)])
+    setTodos([...todos.map(item => item.uuid === taskId ? { ...item, complete: !item.complete } : item)])
   }
   function changeTask(taskId, text) {
-    setTodos([...todos.map(task => task.id === taskId ? { ...task, task: text } : task)]);
+    setTodos([...todos.map(task => task.uuid === taskId ? { ...task, task: text } : task)]);
   }
   function addTask(userInput) {
     if (userInput) {
       const newTask = {
-        id: Math.random().toString(10).substring(2, 9),
-        task: userInput,
-        complete: false,
-        time: +new Date()
+        uuid: Math.random().toString(10).substring(2, 9),
+        name: userInput,
+        done: false,
+        createdAt: +new Date()
       }
       setTodos([newTask, ...todos]);
     }
@@ -134,8 +154,9 @@ function App() {
       <Row justify="center">
         <Pagination
           defaultCurrent={1}
-          total={50}
+          total={amountPages * 10}
           onChange={changeCurrentPage}
+          hideOnSignPage={true}
         />
       </Row>
 

@@ -4,13 +4,13 @@ import { Checkbox, Input, Button, Row, Col} from 'antd';
 function Task({ task, changeTask, getDone, deleteTask }) {
 
     const [editRegime, setEditRegime] = useState(false);
-    const [taskText, setTaskText] = useState(task.task);
+    const [taskText, setTaskText] = useState(task.name);
     let wasChanged = false;
 
     function handleOnBlur() {
         setEditRegime(false)
         if (!wasChanged)
-            setTaskText(task.task);
+            setTaskText(task.name);
         wasChanged = false;
     }
 
@@ -24,13 +24,13 @@ function Task({ task, changeTask, getDone, deleteTask }) {
 
     const handleKeyDown = (e) => {
         if (e.keyCode == 13) {
-            changeTask(task.id, e.currentTarget.value);
+            changeTask(task.uuid, e.currentTarget.value);
             wasChanged = true;
             e.currentTarget.blur();
         }
 
         if (e.keyCode == 27) {
-            setTaskText(task.task)
+            setTaskText(task.name)
             e.currentTarget.blur();
         }
     }
@@ -54,14 +54,14 @@ function Task({ task, changeTask, getDone, deleteTask }) {
     )
 
     return (
-        <Row align="middle" justify="space-between" key={task.id}>
+        <Row align="middle" justify="space-between" key={task.uuid}>
 
             <Col span={1}>
                 <Checkbox
                     type="checkbox"
                     // id={task.id}
-                    onChange={() => getDone(task.id)}
-                    checked={task.complete}>
+                    onChange={() => getDone(task.uuid)}
+                    checked={task.done}>
                 </Checkbox>
             </Col>
 
@@ -70,11 +70,11 @@ function Task({ task, changeTask, getDone, deleteTask }) {
             </Col>
 
             <Col span={2}>
-                {new Date(task.time).toLocaleString('ru-ru')}
+                {new Date(task.createdAt).toLocaleString('ru-ru')}
             </Col>
 
             <Col span={1}>
-                <Button onClick={() => deleteTask(task.id)}>Delete</Button>
+                <Button onClick={() => deleteTask(task.uuid)}>Delete</Button>
             </Col>
         </Row>
     )

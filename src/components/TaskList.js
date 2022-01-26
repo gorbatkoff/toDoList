@@ -6,7 +6,7 @@ const TaskList = ({currentTasks, changeTask, getDone, deleteTask}) => {
     return (
         currentTasks.map(task => <Task 
             task={task}
-            key={task.id}
+            key={task.uuid}
             changeTask={changeTask}
             deleteTask={deleteTask}
             getDone={getDone}
