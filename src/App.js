@@ -4,7 +4,7 @@ import ToDoForm from './components/ToDoForm';
 import TaskList from './components/TaskList';
 import Sort from './components/Sort';
 
-import { Pagination } from 'antd';
+import { Pagination, Row } from 'antd';
 import { Divider } from 'antd';
 
 function App() {
@@ -131,11 +131,13 @@ function App() {
         currentPage={currentPage}
       /> */}
 
-      <Pagination
-        defaultCurrent={1}
-        total={50} 
-        onChange={changeCurrentPage}
-      />
+      <Row justify="center">
+        <Pagination
+          defaultCurrent={1}
+          total={50}
+          onChange={changeCurrentPage}
+        />
+      </Row>
 
     </div>
   );
