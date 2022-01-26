@@ -1,33 +1,32 @@
 import { useState } from "react/cjs/react.development";
 import { Input } from 'antd';
-import { Button, Row } from "antd";
+import { Button, Row, Form } from "antd";
 
+const { Search } = Input;
 
 const ToDoForm = ({ addTask }) => {
 
     const [userInput, setUserInput] = useState('');
 
-    function handleSubmit(e) {
-        e.preventDefault();
-        addTask(userInput);
+    function onEnter(text) {
+        addTask(text);
         setUserInput("");
     }
 
-    function handleChange(e) {
+    function OnEdit(e){
         setUserInput(e.target.value);
     }
 
     return (
-        <Row display="flex">
-            <form onSubmit={handleSubmit}>
-                <Input
-                    onChange={handleChange}
-                    value={userInput}
-                    type="text"
-                    placeholder="Enter task">
-                </Input>
-                <Button>Save</Button>
-            </form>
+        <Row align="middle" justify="space-around">
+            <Input.Search
+                placeholder='I want to...'
+                onSearch={onEnter}
+                enterButton='Add'
+                allowClear
+                onChange={OnEdit}
+                value={userInput}
+            ></Input.Search>
         </Row>
     );
 }

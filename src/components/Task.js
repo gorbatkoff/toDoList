@@ -1,6 +1,5 @@
 import { useState } from "react/cjs/react.development";
-import { Checkbox } from 'antd';
-import { Input } from 'antd';
+import { Checkbox, Input, Button, Row, Col} from 'antd';
 
 function Task({ task, changeTask, getDone, deleteTask }) {
 
@@ -55,26 +54,29 @@ function Task({ task, changeTask, getDone, deleteTask }) {
     )
 
     return (
-        <div className="task" key={task.id}>
-            <Checkbox
-                type="checkbox"
-                // id={task.id}
-                onChange={() => getDone(task.id)}
-                checked={task.complete}>
-            </Checkbox>
+        <Row align="middle" justify="space-between" key={task.id}>
 
-            {/* <Input placeholder="default size" prefix={<UserOutlined />} /> */}
+            <Col span={1}>
+                <Checkbox
+                    type="checkbox"
+                    // id={task.id}
+                    onChange={() => getDone(task.id)}
+                    checked={task.complete}>
+                </Checkbox>
+            </Col>
 
-            <div>
+            <Col span={18}>
                 {editRegime ? edit : look}
-            </div>
+            </Col>
 
-            <div className="time">
+            <Col span={2}>
                 {new Date(task.time).toLocaleString('ru-ru')}
-            </div>
+            </Col>
 
-            <button onClick={() => deleteTask(task.id)}>Delete</button>
-        </div>
+            <Col span={1}>
+                <Button onClick={() => deleteTask(task.id)}>Delete</Button>
+            </Col>
+        </Row>
     )
 }
 
