@@ -11,6 +11,7 @@ const ToDoForm = ({ addTask }) => {
     function onEnter(text) {
         addTask(text);
         setUserInput("");
+        // console.log("ssss")
     }
 
     function OnEdit(e){
