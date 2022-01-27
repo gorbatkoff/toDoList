@@ -1,7 +1,7 @@
 import { useState } from "react/cjs/react.development";
-import { Checkbox, Input, Button, Row, Col} from 'antd';
+import { Checkbox, Input, Button, Row, Col } from 'antd';
 
-function Task({ task, changeTask, getDone, deleteTask }) {
+function Task({ task, changeTask, deleteTask }) {
 
     const [editRegime, setEditRegime] = useState(false);
     const [taskText, setTaskText] = useState(task.name);
@@ -24,7 +24,7 @@ function Task({ task, changeTask, getDone, deleteTask }) {
 
     const handleKeyDown = (e) => {
         if (e.keyCode == 13) {
-            changeTask(task.uuid, e.currentTarget.value);
+            changeTask(e.currentTarget.value, task.uuid);
             wasChanged = true;
             e.currentTarget.blur();
         }
@@ -48,10 +48,17 @@ function Task({ task, changeTask, getDone, deleteTask }) {
             onChange={handleOnChange}
             onKeyDown={handleKeyDown}
             onBlur={handleOnBlur}
-        >
-
-        </Input>
+        />
     )
+
+    // const handlerSubmit = (taskText) => {
+    //     alert(task.text);
+    // }
+
+    const getDone = () => {
+        task.done = !task.done;
+        changeTask(task, task.uuid)
+    }
 
     return (
         <Row align="middle" justify="space-between" key={task.uuid}>
@@ -59,13 +66,14 @@ function Task({ task, changeTask, getDone, deleteTask }) {
             <Col span={1}>
                 <Checkbox
                     type="checkbox"
-                    // id={task.id}
-                    onChange={() => getDone(task.uuid)}
+                    onChange={getDone}
                     checked={task.done}>
                 </Checkbox>
             </Col>
 
-            <Col span={18}>
+            <Col span={18}
+            // onChange={handlerSubmit}
+            >
                 {editRegime ? edit : look}
             </Col>
 
@@ -74,7 +82,7 @@ function Task({ task, changeTask, getDone, deleteTask }) {
             </Col>
 
             <Col span={1}>
-                <Button onClick={() => deleteTask(task.uuid)}>Delete</Button>
+                <Button onClick={(e) => deleteTask(e, task.uuid)}>Delete</Button>
             </Col>
         </Row>
     )

@@ -8,190 +8,107 @@ import axios from 'axios';
 
 function App() {
 
-  // useEffect(() => {
-  //   axios.get('https://todo-api-learning.herokuapp.com/v1/tasks/5').then(res => { setAmountPages(Math.ceil(res.data.count / 5)); console.log(res.data.tasks) setTodos([...res.data.tasks]);
-  //   }).catch(res => console.log(res))
-  // }, []);
-
-  const [todos, setTodos] = useState([]); // Array of the tasks
-  const [currentTasks, setCurrentTasks] = useState(todos); // Copy of array
-  const [type, setType] = useState('All'); // Types of sort by status 
-  const [sortType, setSortType] = useState('reverse'); // Types of sort by date
+  const [filteredTodos, setFilteredTodos] = useState([]); // Array of the tasks
   const [currentPage, setCurrentPage] = useState(1); // State of current page
-  const [amountPages, setAmountPages] = useState(1); // Amount of pages
-
-  const [update, setUpdate] = useState([]);
+  const [status, setStatus] = useState('all') // State for sorting by status
+  const [date, setDate] = useState('desc'); // State for sorting by date
+  const [todosCount, setTodosCount] = useState(0); // State of amount tasks
+  const [todosPerPage, setTodosPerPage] = useState(5); // Const of max tasks per page
   
-  const maxTasks = 5; // Max tasks on any page
-
-  // =-------------------------------------------------------------------------= API Consts
-
   const api = axios.create({
     baseURL: 'https://todo-api-learning.herokuapp.com/v1/',
   });
-  
 
-  const myURL = 'https://todo-api-learning.herokuapp.com/v1';
-  const userId = 5;
-
-  // =-------------------------------------------------------------------------=
-
+  // useEffect in which we get an array of current Tasks 
+  useEffect(() => {
+    getTodos(); // here we call function to get an array of current Tasks
+  }, [status, date, currentPage]); // here i announced states, which need to us for re-render page
 
 
-  async function getTodos(filterBy, order, pp, page) {
-    console.log({
-      filterBy: filterBy,
-      order: order,
-      pp: pp,
-      page: page,
+  const getTodos = async () => { // async function to get an array of tasks from API
+
+    const response = await api.get(`/tasks/5`, { // The start of response
+      params: { // here we add values to our states
+        filterBy: status === 'all' ? '' : status, // here sorting by status
+        order: date, // here sorting by date
+        pp: todosPerPage, // here we add value of postsPerPage
+        page: currentPage // here we add currentPage
+      }
     })
-    try {
-      const res = await api.get(`/tasks/${userId}`, {
-        params: {
-          filterBy: filterBy,
-          order: order,
-          pp: pp,
-          page: page,
-        }
-      })
+    if (response.data.tasks.length === 0 && currentPage > 1){ 
+      setCurrentPage(currentPage - 1)}; // setting current page 
+    setTodosCount(response.data.count); // set response.data.count to our tasks count
+    setFilteredTodos(response.data.tasks); // set tasks to FilteredTodos State
+  };
 
-      setTodos([...res.data.tasks]);
-      return res;
-    }
+  const addTask = async(input) => { // here i declarate function for creating new Task and post it to server
+    const newTask = { // newTask object
+      name: input, // input which user write in input form
+      done: false // done false 'cause it's logic
+    };
 
-    catch (err) {
-      return { data: 0, tasks: [] }
-    }
+    await api.post(`task/5`, newTask); // sending a post request to the server
+    await getTodos(); // get updated list of Tasks
   }
 
-
-useEffect( async () => {
-
-  const res = await getTodos(type, sortType, maxTasks, currentPage);
-
-  const filtredTasks = todos.filter(task => selectOption(task, type));
-
-  const outputTasks = filtredTasks
-    .sort((a, b) => sortByDate(a, b, sortType))
-    .slice((currentPage - 1) * maxTasks, currentPage * maxTasks);
-
-  const pagesFraction = filtredTasks.length / maxTasks;
-
-  let amountPages = filtredTasks.length % maxTasks === 0 ? pagesFraction : Math.floor(pagesFraction) + 1;
-
-  if (amountPages < 1) {
-    setType('All')
-    amountPages = 1;
+  const deleteTask = async(e, id) => {
+    e.currentTarget.disabled = true;
+    await api.delete(`/task/5/${id}`);
+    await getTodos();
   }
 
-  if (amountPages < currentPage) {
-    setCurrentPage(amountPages)
+  // const getDone = async(id) => {
+  //   alert("Sup 2ch");
+  // }
+
+  const changeTask = async(text, id) => {
+    let req = await api.patch(`/task/5/${id}`, text); // sending new task to API
+    await getTodos(); // rerendering
+    
+    console.log("change task")
+    
+    return req;
   }
 
-  setAmountPages(amountPages);
-  setCurrentTasks(outputTasks);
+  const sortByStatus = async (val) => setStatus(val);
 
-}, [todos, type, sortType, currentPage, update]);
+  const sortByDate = async (val) => setDate(val)
 
-function selectOption(task, type) {
-  switch (type) {
-    case 'All':
-      return true
-
-    case 'Done':
-      if (task.done)
-        return true;
-      return false;
-
-    case "Undone":
-      if (task.done)
-        return false;
-      return true;
-  }
-}
-function sortByStatus(arg) {
-  setType(arg);
-  // console.log(arg)
-}
-function sortingTasks(arg) {
-  setSortType(arg);
-}
-function sortByDate(a, b, sortType) {
-  if (sortType === 'standart') {
-    if (a < b)
-      return 1;
-    return -1;
+  const paginate = (num) => {
+    getTodos();
+    setCurrentPage(num);
   }
 
-  if (sortType === 'reverse') {
-    if (a > b)
-      return -1;
-    return 1;
-  }
-}
-function deleteTask(id) {
-  setTodos([...todos.filter((todo) => todo.uuid !== id)])
-}
-function getDone(taskId) {
-  setTodos([...todos.map(item => item.uuid === taskId ? { ...item, done: !item.done } : item)])
-}
-function changeTask(taskId, text) {
-  setTodos([...todos.map(task => task.uuid === taskId ? { ...task, task: text } : task)]);
-}
+  return (
+    <div className="App">
+      <Divider><h3>TO DO LIST</h3></Divider>
 
+      <ToDoForm addTask={addTask} />
 
-
-async function addTask(text) {
-  try{
-    const newTask = {
-      "name": text,
-      "done": false,
-    }
-    await api.post(`task/5`, newTask);
-    setUpdate([]);
-    console.log("hello")
-  }
-
-  catch{
-    console.log("ss")
-  }
-}
-
-
-
-
-function changeCurrentPage(pageNumber) {
-  setCurrentPage(pageNumber)
-}
-
-return (
-  <div className="App">
-    <Divider><h3>TO DO LIST</h3></Divider>
-
-    <ToDoForm addTask={addTask} />
-
-    <Sort
-      sortByStatus={sortByStatus}
-      sortingTasks={sortingTasks}
-    />
-
-    <TaskList
-      currentTasks={currentTasks}
-      changeTask={changeTask}
-      deleteTask={deleteTask}
-      getDone={getDone}
-    />
-
-    <Row justify="center">
-      <Pagination
-        defaultCurrent={1}
-        total={amountPages * 10}
-        onChange={changeCurrentPage}
-        hideOnSinglePage={true}
+      <Sort
+        sortByStatus={sortByStatus}
+        sortByDate={sortByDate}
       />
-    </Row>
 
-  </div>
+      <TaskList
+        filteredTodos={filteredTodos}
+        changeTask={changeTask}
+        deleteTask={deleteTask}
+        // getDone={getDone}
+      />
+
+      <Row justify="center">
+        <Pagination
+          defaultCurrent={1}
+          total={todosCount * 10}
+          onChange={paginate}
+          hideOnSinglePage={true}
+          current={currentPage}
+          pageSize={todosPerPage}
+        />
+      </Row>
+
+    </div>
   );
 }
 

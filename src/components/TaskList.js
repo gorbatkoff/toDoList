@@ -1,15 +1,15 @@
 import { useState } from "react/cjs/react.development";
 import Task from "./Task";
 
-const TaskList = ({currentTasks, changeTask, getDone, deleteTask}) => {
+const TaskList = ({filteredTodos, changeTask, deleteTask}) => {
 
     return (
-        currentTasks.map(task => <Task 
+        filteredTodos.map(task => <Task 
             task={task}
             key={task.uuid}
             changeTask={changeTask}
             deleteTask={deleteTask}
-            getDone={getDone}
+            // getDone={getDone}
         />)
     );
 }
