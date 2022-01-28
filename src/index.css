@@ -1,0 +1,7 @@
+.wrapper {
+    /* сверху | справа | снизу | слева */
+    margin: 0 auto;
+    padding: 1em;
+    min-width: 300px;
+    max-width: 1200px;
+}

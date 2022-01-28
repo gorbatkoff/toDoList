@@ -30,7 +30,7 @@ function Task({ task, changeTask, deleteTask }) {
             if(taskText === "" || taskText.includes('`')){
                 setTaskText(prevText);
             }
-            changeTask(task.uuid, {name: taskText});
+            changeTask(task.uuid, {name: taskText, done: task.done});
             wasChanged = true;
             e.currentTarget.blur();
         }
@@ -57,13 +57,9 @@ function Task({ task, changeTask, deleteTask }) {
         />
     )
 
-    // const handlerSubmit = () => {
-    //     if(taskText === ""); alert("none");
-    // }
-
     const getDone = () => {
         task.done = !task.done;
-        changeTask(task, task.uuid)
+        changeTask(task.uuid, task)
     }
 
     return (
@@ -81,6 +77,7 @@ function Task({ task, changeTask, deleteTask }) {
             // onChange={() => handlerSubmit()}
             >
                 {editRegime ? edit : look}
+                {/* {"`" == "ё" ? alert("Da") : alert("net")} */}
             </Col>
 
             <Col span={2}>

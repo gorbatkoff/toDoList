@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import ToDoForm from './components/ToDoForm';
 import TaskList from './components/TaskList';
 import Sort from './components/Sort';
-import { Pagination, Row, Divider, message } from 'antd';
+import { Pagination, Row, Divider, message, Space } from 'antd';
 import axios from 'axios';
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
     message.info(err);
   }
 
-  const api = axios.create({
+  const api = axios.create({ // here declaration of API connection
     baseURL: 'https://todo-api-learning.herokuapp.com/v1/',
   });
 
@@ -35,11 +35,12 @@ function App() {
         filterBy: status === 'all' ? '' : status, // here sorting by status
         order: date, // here sorting by date
         pp: todosPerPage, // here we add value to postsPerPage
-        page: currentPage // here we add currentPage
+        page: currentPage // here we add currentPage  
       }
     })
-    if (response.data.tasks.length === 0 && currentPage > 1) {
-      setCurrentPage(currentPage - 1)
+    if (response.data.tasks.length === 0 && currentPage > 1) { // if amount of tasks equals to zero and current page > 1 then
+      setCurrentPage(currentPage - 1) // i change current page to previous
+
     }; // setting current page 
     setTodosCount(response.data.count); // set response.data.count to our tasks count
     setFilteredTodos(response.data.tasks); // set tasks to FilteredTodos State
@@ -56,59 +57,64 @@ function App() {
       await getTodos(); // get updated list of Tasks
     }
     catch {
-      info("This task already exist")
+      info("This task already exist") // alerting message of error
     }
   }
 
-  const deleteTask = async (e, id) => {
-    e.currentTarget.disabled = true;
-    await api.delete(`/task/5/${id}`);
-    await getTodos();
+  const deleteTask = async (e, id) => { // function for deleting task
+    e.currentTarget.disabled = true; // here we make current button disable 'cause user can spam by it
+    await api.delete(`/task/5/${id}`); // deleting task from api
+    await getTodos(); // rerendering list of tasks
   }
 
-  const changeTask = async (id, text) => {
+  const changeTask = async (id, text) => { // function for changing task
     try {
       let req = await api.patch(`/task/5/${id}`, text); // sending new task to API
       await getTodos(); // rerendering
-      console.log(req.data)
-      console.log(id);
       return req;
     }
 
-    catch {
+    catch { // handler of Errors
       info("Error with update task")
-      await getTodos();
+      await getTodos(); // rerendering of current tasks
     }
   }
 
-  const sortByStatus = async (val) => setStatus(val);
+  const sortByStatus = async (val) => setStatus(val); // here sorting by status (all, done, undone)
 
-  const sortByDate = async (val) => setDate(val)
+  const sortByDate = async (val) => setDate(val); // here sorting by date (asc, desc)
 
-  const paginate = (num) => {
-    getTodos();
-    setCurrentPage(num);
+  const paginate = (num) => { // Pagination
+    getTodos(); // rerendering current tasks
+    setCurrentPage(num); // changing current page
   }
 
   return (
     <div className="App">
       <Divider><h3>TO DO LIST</h3></Divider>
 
-      <ToDoForm addTask={addTask} />
+      <div className="wrapper">
+        <div style={{marginBottom: "1em"}}>
+        <ToDoForm // Here input to create new task 
+          addTask={addTask}
+        />
+        </div>
 
-      <Sort
-        sortByStatus={sortByStatus}
-        sortByDate={sortByDate}
-      />
-
-      <TaskList
-        filteredTodos={filteredTodos}
-        changeTask={changeTask}
-        deleteTask={deleteTask}
-      />
+        <div style={{marginBottom: "1em"}}>
+          <Sort // sorting
+            sortByStatus={sortByStatus}
+            sortByDate={sortByDate}
+          />
+        </div>
+        <TaskList // list of tasks
+          filteredTodos={filteredTodos}
+          changeTask={changeTask}
+          deleteTask={deleteTask}
+        />
+      </div>
 
       <Row justify="center">
-        <Pagination
+        <Pagination // pagination
           defaultCurrent={1}
           total={todosCount}
           onChange={paginate}
@@ -118,7 +124,7 @@ function App() {
         />
       </Row>
 
-    </div>
+    </div >
   );
 }
 
