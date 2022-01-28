@@ -1,5 +1,5 @@
 {
-  "homepage": "http://gorbatkoff.github.io/toDoList",
+  "homepage": "https://gorbatkoff.github.io/toDoList",
   "name": "todo",
   "version": "0.1.0",
   "private": true,
@@ -36,7 +36,6 @@
     "jest": "^27.4.3",
     "jest-resolve": "^27.4.2",
     "jest-watch-typeahead": "^1.0.0",
-    "mini-css-extract-plugin": "^2.4.5",
     "postcss": "^8.4.4",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-loader": "^6.2.1",
@@ -142,6 +141,7 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^3.2.3"
+    "gh-pages": "^3.2.3",
+    "mini-css-extract-plugin": "2.4.5"
   }
 }
