@@ -5,6 +5,8 @@ function Task({ task, changeTask, deleteTask }) {
 
     const [editRegime, setEditRegime] = useState(false);
     const [taskText, setTaskText] = useState(task.name);
+    const [prevText, setPrevText] = useState()
+
     let wasChanged = false;
 
     function handleOnBlur() {
@@ -23,14 +25,17 @@ function Task({ task, changeTask, deleteTask }) {
     }
 
     const handleKeyDown = (e) => {
-        if (e.keyCode == 13) {
-            task.name = "sddasd";
+        setPrevText(taskText);
+        if (e.keyCode === 13){
+            if(taskText === "" || taskText.includes('`')){
+                setTaskText(prevText);
+            }
             changeTask(task.uuid, {name: taskText});
             wasChanged = true;
             e.currentTarget.blur();
         }
 
-        if (e.keyCode == 27) {
+        if (e.keyCode === 27) {
             setTaskText(task.name)
             e.currentTarget.blur();
         }
@@ -52,8 +57,8 @@ function Task({ task, changeTask, deleteTask }) {
         />
     )
 
-    // const handlerSubmit = (e) => {
-    //     console.log(e.currentTarget.value);
+    // const handlerSubmit = () => {
+    //     if(taskText === ""); alert("none");
     // }
 
     const getDone = () => {
@@ -73,7 +78,7 @@ function Task({ task, changeTask, deleteTask }) {
             </Col>
 
             <Col span={18}
-            // onChange={handlerSubmit}
+            // onChange={() => handlerSubmit()}
             >
                 {editRegime ? edit : look}
             </Col>

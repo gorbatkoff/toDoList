@@ -76,6 +76,8 @@ function App() {
     }
 
     catch {
+      info("Error with update task")
+      await getTodos();
     }
   }
 
