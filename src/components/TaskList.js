@@ -9,7 +9,6 @@ const TaskList = ({filteredTodos, changeTask, deleteTask}) => {
             key={task.uuid}
             changeTask={changeTask}
             deleteTask={deleteTask}
-            // getDone={getDone}
         />)
     );
 }

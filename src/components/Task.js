@@ -24,7 +24,8 @@ function Task({ task, changeTask, deleteTask }) {
 
     const handleKeyDown = (e) => {
         if (e.keyCode == 13) {
-            changeTask(e.currentTarget.value, task.uuid);
+            task.name = "sddasd";
+            changeTask(task.uuid, {name: taskText});
             wasChanged = true;
             e.currentTarget.blur();
         }
@@ -51,8 +52,8 @@ function Task({ task, changeTask, deleteTask }) {
         />
     )
 
-    // const handlerSubmit = (taskText) => {
-    //     alert(task.text);
+    // const handlerSubmit = (e) => {
+    //     console.log(e.currentTarget.value);
     // }
 
     const getDone = () => {
