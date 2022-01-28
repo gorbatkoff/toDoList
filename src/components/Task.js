@@ -77,10 +77,9 @@ function Task({ task, changeTask, deleteTask }) {
             // onChange={() => handlerSubmit()}
             >
                 {editRegime ? edit : look}
-                {/* {"`" == "ё" ? alert("Da") : alert("net")} */}
             </Col>
 
-            <Col span={2}>
+            <Col span={4}>
                 {new Date(task.createdAt).toLocaleString('ru-ru')}
             </Col>
 
