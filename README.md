@@ -1,3 +1,9 @@
+# Hello there! It's my first project which i maked in APACA IT
+Here i will tell you about it.
+
+My task is was writing a good To Do List and create it with usage next technologyes like a React, Node JS and Express.js. By the way i should was work with Ant Design and Postgres SQL
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

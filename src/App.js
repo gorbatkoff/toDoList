@@ -19,7 +19,8 @@ function App() {
   }
 
   const api = axios.create({ // here declaration of API connection
-    baseURL: 'https://todo-api-learning.herokuapp.com/v1/',
+    baseURL: 'https://gorbatkoffapinodejs.herokuapp.com',
+    // baseURL: 'https://gorbatkoffapinodejs.herokuapp.com/tasks'
   });
 
   // useEffect in which we get an array of current Tasks 
@@ -30,7 +31,7 @@ function App() {
 
   const getTodos = async () => { // async function to get an array of tasks from API
 
-    const response = await api.get(`/tasks/5`, { // The start of response
+    const response = await api.get(`/tasks/`, { // The start of getting tasks
       params: { // here we add values to our states
         filterBy: status === 'all' ? '' : status, // here sorting by status
         order: date, // here sorting by date
@@ -38,12 +39,13 @@ function App() {
         page: currentPage // here we add currentPage  
       }
     })
-    if (response.data.tasks.length === 0 && currentPage > 1) { // if amount of tasks equals to zero and current page > 1 then
+    if (response.data.todos.length === 0 && currentPage > 1) { // if amount of tasks equals to zero and current page > 1 then
       setCurrentPage(currentPage - 1) // i change current page to previous
 
     }; // setting current page 
-    setTodosCount(response.data.count); // set response.data.count to our tasks count
-    setFilteredTodos(response.data.tasks); // set tasks to FilteredTodos State
+    console.log(response.data);
+    setTodosCount(response.data.numberOfTasks); // set response.data.count to our tasks count
+    setFilteredTodos(response.data.todos); // set tasks to FilteredTodos State
   };
 
   const addTask = async (input) => { // here i declarate function for creating new Task and post it to server
@@ -53,23 +55,24 @@ function App() {
         done: false // done false 'cause it's logic
       };
 
-      await api.post(`task/5`, newTask); // sending a post request to the server
+      await api.post(`/tasks/`, newTask); // sending a post request to the server
       await getTodos(); // get updated list of Tasks
     }
     catch {
       info("This task already exist") // alerting message of error
+      // console.log(e)
     }
   }
 
   const deleteTask = async (e, id) => { // function for deleting task
     e.currentTarget.disabled = true; // here we make current button disable 'cause user can spam by it
-    await api.delete(`/task/5/${id}`); // deleting task from api
+    await api.delete(`/tasks/${id}`); // deleting task from api
     await getTodos(); // rerendering list of tasks
   }
 
   const changeTask = async (id, text) => { // function for changing task
     try {
-      let req = await api.patch(`/task/5/${id}`, text); // sending new task to API
+      let req = await api.patch(`/tasks/${id}`, text); // sending new task to API
       await getTodos(); // rerendering
       return req;
     }
