@@ -5,6 +5,10 @@ import Sort from './components/Sort';
 import { Pagination, Row, Divider, message, Space } from 'antd';
 import axios from 'axios';
 
+const api = axios.create({ // here declaration of API connection
+  baseURL: 'https://gorbatkoffapinodejs.herokuapp.com',
+});
+
 function App() {
 
   const [filteredTodos, setFilteredTodos] = useState([]); // Array of the tasks
@@ -18,10 +22,6 @@ function App() {
     message.info(err);
   }
 
-  const api = axios.create({ // here declaration of API connection
-    baseURL: 'https://gorbatkoffapinodejs.herokuapp.com',
-    // baseURL: 'https://gorbatkoffapinodejs.herokuapp.com/tasks'
-  });
 
   // useEffect in which we get an array of current Tasks 
   useEffect(() => {
@@ -39,6 +39,7 @@ function App() {
         page: currentPage // here we add currentPage  
       }
     })
+
     if (response.data.todos.length === 0 && currentPage > 1) { // if amount of tasks equals to zero and current page > 1 then
       setCurrentPage(currentPage - 1) // i change current page to previous
 
@@ -46,6 +47,8 @@ function App() {
     console.log(response.data);
     setTodosCount(response.data.numberOfTasks); // set response.data.count to our tasks count
     setFilteredTodos(response.data.todos); // set tasks to FilteredTodos State
+    
+
   };
 
   const addTask = async (input) => { // here i declarate function for creating new Task and post it to server
@@ -97,13 +100,13 @@ function App() {
       <Divider><h3>TO DO LIST</h3></Divider>
 
       <div className="wrapper">
-        <div style={{marginBottom: "1em"}}>
-        <ToDoForm // Here input to create new task 
-          addTask={addTask}
-        />
+        <div style={{ marginBottom: "1em" }}>
+          <ToDoForm // Here input to create new task 
+            addTask={addTask}
+          />
         </div>
 
-        <div style={{marginBottom: "1em"}}>
+        <div style={{ marginBottom: "1em" }}>
           <Sort // sorting
             sortByStatus={sortByStatus}
             sortByDate={sortByDate}
