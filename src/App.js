@@ -2,30 +2,32 @@ import { useState, useEffect } from 'react';
 import ToDoForm from './components/ToDoForm';
 import TaskList from './components/TaskList';
 import Sort from './components/Sort';
-import { Pagination, Row, Divider, message, Space } from 'antd';
+import { Pagination, Row, Divider, message } from 'antd';
 import axios from 'axios';
 
-const api = axios.create({ // here declaration of API connection
+const api = axios.create({ // declaration of API connection
   baseURL: 'https://gorbatkoffapinodejs.herokuapp.com',
 });
 
 api.interceptors.response.use(null, error => {
   console.log('INTERCEPTOR CALLED');
-  
+
   const response = error.request.response;
   let textOfError;
 
-  if(!response) {
+  if (!response) {
     textOfError = "Internal Error"
   }
 
   try {
     textOfError = JSON.parse(response).message;
-  } catch (e) {
+  }
+
+  catch (e) {
     textOfError = "JSON contains no error"
   }
 
-  message.error(textOfError, 3);
+  message.error(textOfError);
 
 })
 
@@ -55,7 +57,7 @@ function App() {
         filterBy: status === 'all' ? '' : status, // here sorting by status
         order: date, // here sorting by date
         pp: todosPerPage, // here we add value to postsPerPage
-        page: currentPage // here we add currentPage  
+        page: currentPage // here we set currentPage  
       }
     })
 
@@ -70,7 +72,7 @@ function App() {
 
   };
 
-  const addTask = async (input) => { // here i declarate function for creating new Task and post it to server
+  const addTask = async (input) => { // here i declarate function for creating new Task and posting it to the server
     try {
       const newTask = { // newTask object
         name: input, // input which user write in input form
