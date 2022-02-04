@@ -9,6 +9,26 @@ const api = axios.create({ // here declaration of API connection
   baseURL: 'https://gorbatkoffapinodejs.herokuapp.com',
 });
 
+api.interceptors.response.use(null, error => {
+  console.log('INTERCEPTOR CALLED');
+  
+  const response = error.request.response;
+  let textOfError;
+
+  if(!response) {
+    textOfError = "Internal Error"
+  }
+
+  try {
+    textOfError = JSON.parse(response).message;
+  } catch (e) {
+    textOfError = "JSON contains no error"
+  }
+
+  message.error(textOfError, 3);
+
+})
+
 function App() {
 
   const [filteredTodos, setFilteredTodos] = useState([]); // Array of the tasks
@@ -17,7 +37,6 @@ function App() {
   const [date, setDate] = useState('desc'); // State for sorting by date
   const [todosCount, setTodosCount] = useState(0); // State of amount tasks
   const [todosPerPage] = useState(5); // Const of max tasks per page
-
   const info = (err) => {
     message.info(err);
   }
@@ -47,7 +66,7 @@ function App() {
     console.log(response.data);
     setTodosCount(response.data.numberOfTasks); // set response.data.count to our tasks count
     setFilteredTodos(response.data.todos); // set tasks to FilteredTodos State
-    
+
 
   };
 

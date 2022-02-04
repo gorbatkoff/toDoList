@@ -1,5 +1,5 @@
 import { useState } from "react/cjs/react.development";
-import { Checkbox, Input, Button, Row, Col } from 'antd';
+import { Checkbox, Input, Button, Row, Col, message } from 'antd';
 
 function Task({ task, changeTask, deleteTask }) {
 
@@ -25,14 +25,19 @@ function Task({ task, changeTask, deleteTask }) {
     }
 
     const handleKeyDown = (e) => {
-        setPrevText(taskText);
-        if (e.keyCode === 13){
-            if(taskText === "" || taskText.includes('`')){
-                setTaskText(prevText);
-            }
-            changeTask(task.uuid, {name: taskText, done: task.done});
+
+        if (e.keyCode === 13) {
+
+            const clearedText = taskText.trim();
+
+            if (clearedText === '') return message.error('Task text must not be empty');
+            // setTaskText(clearedText);
+
+            changeTask(task.uuid, { name: clearedText, done: task.done }).then(res => {
+                if (!res.data) setTaskText(task.name);
+            });
             wasChanged = true;
-            e.currentTarget.blur();
+            e.currentTarget.blur()
         }
 
         if (e.keyCode === 27) {
