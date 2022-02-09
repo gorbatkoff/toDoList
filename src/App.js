@@ -82,11 +82,12 @@ function App() {
       };
 
       await api.post(`/tasks/`, newTask); // sending a post request to the server
-      await getTodos(); // get updated list of Tasks
+ // get updated list of Tasks
     }
-    catch {
-      info("This task already exist") // alerting message of error
-      // console.log(e)
+    catch (e) {
+      // info(e.name) // alerting message of error
+      console.log(e)
+      await getTodos();
     }
   }
 
