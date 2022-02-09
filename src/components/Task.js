@@ -33,6 +33,8 @@ function Task({ task, changeTask, deleteTask }) {
             if (clearedText === '') return message.error('Task text must not be empty');
             // setTaskText(clearedText);
 
+            
+
             changeTask(task.uuid, { name: clearedText, done: task.done }).then(res => {
                 if (!res.data) setTaskText(task.name);
             });
