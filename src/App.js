@@ -83,8 +83,7 @@ function App() {
  // get updated list of Tasks
     }
     catch (e) {
-      // info(e.name) // alerting message of error
-      console.log(e)
+      info("Error! This task already exist");
       await getTodos();
     }
     await getTodos();
@@ -96,9 +95,9 @@ function App() {
     await getTodos(); // rerendering list of tasks
   }
 
-  const changeTask = async (id, text) => { // function for changing task
+  const changeTask = async (id, task ) => { // function for changing task
     try {
-      let req = await api.patch(`/tasks/${id}`, text); // sending new task to API
+      let req = await api.patch(`/tasks/${id}`, task); // sending new task to API
       await getTodos(); // rerendering
       return req;
     }
@@ -131,6 +130,7 @@ function App() {
         </div>
       </Divider>
 
+      <main>
       <div className="wrapper">
         <div style={{ marginBottom: "1em" }}>
           <ToDoForm // Here input to create new task 
@@ -161,6 +161,7 @@ function App() {
           pageSize={todosPerPage}
         />
       </Row>
+      </main>
 
       {/* <Login></Login> */}
 
