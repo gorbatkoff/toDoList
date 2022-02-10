@@ -70,8 +70,6 @@ function App() {
     console.log(response.data); 
     setTodosCount(response.data.todos.count); // set response.data.count to our tasks count
     setFilteredTodos(response.data.todos.rows); // set tasks to FilteredTodos State
-
-
   };
 
   const addTask = async (input) => { // here i declarate function for creating new Task and posting it to the server
@@ -89,6 +87,7 @@ function App() {
       console.log(e)
       await getTodos();
     }
+    await getTodos();
   }
 
   const deleteTask = async (e, id) => { // function for deleting task
