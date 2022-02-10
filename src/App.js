@@ -1,10 +1,16 @@
 import { useState, useEffect } from 'react';
+
+import { Routes, Route, Link } from 'react-router-dom';
+
+import Main from './components/Main';
+import Login from './components/Login';
+import Register from './components/Register';
+
 import ToDoForm from './components/ToDoForm';
 import TaskList from './components/TaskList';
 import Sort from './components/Sort';
 import { Pagination, Row, Divider, message } from 'antd';
 import axios from 'axios';
-import Login from './components/Login';
 
 const api = axios.create({ // declaration of API connection
   // baseURL: 'https://gorbatkoffapinodejs.herokuapp.com',
@@ -49,7 +55,7 @@ function App() {
   // useEffect in which we get an array of current Tasks 
   useEffect(() => {
     getTodos(); // here we call function to get an array of current Tasks
-  }, [status, date, currentPage]); // here i announced states, which need to us for re-render page
+  }, [status, date, currentPage, todosCount]); // here i announced states, which need to us for re-render page
 
 
   const getTodos = async () => { // async function to get an array of tasks from API
@@ -62,14 +68,23 @@ function App() {
         page: currentPage // here we set currentPage  
       }
     });
-    
+
     if (response.data.todos.rows.length === 0 && currentPage > 1) { // if amount of tasks equals to zero and current page > 1 then
       setCurrentPage(currentPage - 1) // i change current page to previous
 
     }; // setting current page 
-    console.log(response.data); 
+    try{
+
     setTodosCount(response.data.todos.count); // set response.data.count to our tasks count
+
     setFilteredTodos(response.data.todos.rows); // set tasks to FilteredTodos State
+
+    console.log(response.data.todos.count)
+    }
+
+    catch (e){
+      info("Something gone wrong")
+    }
   };
 
   const addTask = async (input) => { // here i declarate function for creating new Task and posting it to the server
@@ -80,7 +95,7 @@ function App() {
       };
 
       await api.post(`/tasks/`, newTask); // sending a post request to the server
- // get updated list of Tasks
+      // get updated list of Tasks
     }
     catch (e) {
       info("Error! This task already exist");
@@ -95,7 +110,7 @@ function App() {
     await getTodos(); // rerendering list of tasks
   }
 
-  const changeTask = async (id, task ) => { // function for changing task
+  const changeTask = async (id, task) => { // function for changing task
     try {
       let req = await api.patch(`/tasks/${id}`, task); // sending new task to API
       await getTodos(); // rerendering
@@ -118,50 +133,73 @@ function App() {
   }
 
   return (
+
+
     <div className="App">
       <Divider><h3>TO DO LIST</h3></Divider>
 
       <Divider orientation="right" plain>
-        <div style={{width: "100px"}}>
+        <div style={{ width: "100px" }}>
           <Row justify="space-between">
-          <a href='./login'>Log In</a>
-          <a href='./register'>Sign Up</a>
+            <Link to='./login'>Log In</Link>
+            <Link to='./register'>Sign Up</Link>
           </Row>
         </div>
       </Divider>
 
-      <main>
-      <div className="wrapper">
-        <div style={{ marginBottom: "1em" }}>
-          <ToDoForm // Here input to create new task 
-            addTask={addTask}
+      <Routes>
+        <Route path="/" element={<Main
+        addTask={addTask}
+        sortByStatus={sortByStatus}
+        sortByDate={sortByDate}
+        filteredTodos={filteredTodos}
+        changeTask={changeTask}
+        deleteTask={deleteTask}
+        defaultCurrent={1}
+        total={todosCount}
+        onChange={paginate}
+        hideOnSinglePage={true}
+        current={currentPage}
+        pageSize={todosPerPage}
+        />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+      </Routes>
+
+
+      {/* <main>
+        <div className="wrapper">
+          <div style={{ marginBottom: "1em" }}>
+            <ToDoForm // Here input to create new task 
+              addTask={addTask}
+            />
+          </div>
+
+          <div style={{ marginBottom: "1em" }}>
+            <Sort // sorting
+              sortByStatus={sortByStatus}
+              sortByDate={sortByDate}
+            />
+          </div>
+          <TaskList // list of tasks
+            filteredTodos={filteredTodos}
+            changeTask={changeTask}
+            deleteTask={deleteTask}
           />
         </div>
 
-        <div style={{ marginBottom: "1em" }}>
-          <Sort // sorting
-            sortByStatus={sortByStatus}
-            sortByDate={sortByDate}
+        <Row justify="center">
+          <Pagination // pagination
+            defaultCurrent={1}
+            total={todosCount}
+            onChange={paginate}
+            hideOnSinglePage={true}
+            current={currentPage}
+            pageSize={todosPerPage}
           />
-        </div>
-        <TaskList // list of tasks
-          filteredTodos={filteredTodos}
-          changeTask={changeTask}
-          deleteTask={deleteTask}
-        />
-      </div>
-
-      <Row justify="center">
-        <Pagination // pagination
-          defaultCurrent={1}
-          total={todosCount}
-          onChange={paginate}
-          hideOnSinglePage={true}
-          current={currentPage}
-          pageSize={todosPerPage}
-        />
-      </Row>
-      </main>
+        </Row>
+      </main> */}
 
       {/* <Login></Login> */}
 
