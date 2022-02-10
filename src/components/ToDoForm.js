@@ -9,6 +9,10 @@ const ToDoForm = ({ addTask }) => {
     const [userInput, setUserInput] = useState('');
 
     function onEnter(text) {
+        text.trim();
+
+        if(!text) throw new Error("Something went wrong!")
+
         addTask(text);
         setUserInput("");
         // console.log("ssss")
