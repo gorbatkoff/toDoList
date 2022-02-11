@@ -8,12 +8,10 @@ export default function Login({ addUser }) {
 
   const onFinish = () => {
     try {
-      
+
       if (password != confirmPassword) {
         message.error(`The password and confirm password fields do not match. Try again`);
       }
-
-      // message.success('Submit success!');
 
       addUser(login, password);
 
