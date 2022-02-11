@@ -44,8 +44,8 @@ function App() {
   const [date, setDate] = useState('desc'); // State for sorting by date
   const [todosCount, setTodosCount] = useState(0); // State of amount tasks
   const [todosPerPage] = useState(5); // Const of max tasks per page
-  
-  let navigate = useNavigate(); 
+
+  let navigate = useNavigate();
 
   const info = (err) => {
     message.info(err);
@@ -73,15 +73,15 @@ function App() {
       setCurrentPage(currentPage - 1) // i change current page to previous
 
     }; // setting current page 
-    try{
+    try {
 
-    setTodosCount(response.data.todos.count); // set response.data.count to our tasks count
+      setTodosCount(response.data.todos.count); // set response.data.count to our tasks count
 
-    setFilteredTodos(response.data.todos.rows); // set tasks to FilteredTodos State
+      setFilteredTodos(response.data.todos.rows); // set tasks to FilteredTodos State
 
     }
 
-    catch (e){
+    catch (e) {
       info("Something gone wrong")
     }
   };
@@ -100,7 +100,6 @@ function App() {
       info("Error! This task already exist");
       await getTodos();
     }
-    await getTodos();
   }
 
   const deleteTask = async (e, id) => { // function for deleting task
@@ -132,16 +131,20 @@ function App() {
   }
 
   const addUser = async (login, password) => {
-    
+
     try {
-      const newUser = { // newTask object
-        login: login, // input which user write in input form
-        password: password // done false 'cause it's logic
+      const newUser = { // Declarate new user
+        login: login, // login which user enter
+        password: password // password which user enter
       };
 
-      await api.post(`/users/`, newUser); // sending a post request to the server
-      // navigate('/login');
-    } catch (e) {
+      await api.post(`/register/`, newUser); // sending a post request to the server
+
+
+      navigate('/register'); // change current page to ./register
+    }
+
+    catch (e) {
       info("Something gone wrong")
     }
   }
@@ -152,32 +155,32 @@ function App() {
     <div className="App">
       <Divider><h3>TO DO LIST</h3></Divider>
 
-        <Divider orientation="right" plain>
-          <div style={{ width: "100px" }}>
-            <Row justify="space-between">
-              <Link to='./login'>Log In</Link>
-              <Link to='./register'>Sign Up</Link>
-            </Row>
-          </div>
-        </Divider>
+      <Divider orientation="right" plain>
+        <div style={{ width: "100px" }}>
+          <Row justify="space-between">
+            <Link to='./login'>Log In</Link>
+            <Link to='./register'>Sign Up</Link>
+          </Row>
+        </div>
+      </Divider>
 
       <Routes>
         <Route path="/" element={<Main
-        addTask={addTask}
-        sortByStatus={sortByStatus}
-        sortByDate={sortByDate}
-        filteredTodos={filteredTodos}
-        changeTask={changeTask}
-        deleteTask={deleteTask}
-        defaultCurrent={1}
-        total={todosCount}
-        onChange={paginate}
-        hideOnSinglePage={true}
-        current={currentPage}
-        pageSize={todosPerPage}
+          addTask={addTask}
+          sortByStatus={sortByStatus}
+          sortByDate={sortByDate}
+          filteredTodos={filteredTodos}
+          changeTask={changeTask}
+          deleteTask={deleteTask}
+          defaultCurrent={1}
+          total={todosCount}
+          onChange={paginate}
+          hideOnSinglePage={true}
+          current={currentPage}
+          pageSize={todosPerPage}
         />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register addUser={addUser}/>} />
+        <Route path="/register" element={<Register addUser={addUser} />} />
 
       </Routes>
 
