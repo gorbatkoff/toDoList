@@ -1,14 +1,11 @@
 import { useState, useEffect } from 'react';
 
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate } from 'react-router-dom';
+
 
 import Main from './components/Main';
 import Login from './components/Login';
 import Register from './components/Register';
-
-import ToDoForm from './components/ToDoForm';
-import TaskList from './components/TaskList';
-import Sort from './components/Sort';
 import { Pagination, Row, Divider, message } from 'antd';
 import axios from 'axios';
 
@@ -47,6 +44,9 @@ function App() {
   const [date, setDate] = useState('desc'); // State for sorting by date
   const [todosCount, setTodosCount] = useState(0); // State of amount tasks
   const [todosPerPage] = useState(5); // Const of max tasks per page
+  
+  let navigate = useNavigate(); 
+
   const info = (err) => {
     message.info(err);
   }
@@ -79,7 +79,6 @@ function App() {
 
     setFilteredTodos(response.data.todos.rows); // set tasks to FilteredTodos State
 
-    console.log(response.data.todos.count)
     }
 
     catch (e){
@@ -132,20 +131,35 @@ function App() {
     setCurrentPage(num); // changing current page
   }
 
+  const addUser = async (login, password) => {
+    
+    try {
+      const newUser = { // newTask object
+        login: login, // input which user write in input form
+        password: password // done false 'cause it's logic
+      };
+
+      await api.post(`/users/`, newUser); // sending a post request to the server
+      // navigate('/login');
+    } catch (e) {
+      info("Something gone wrong")
+    }
+  }
+
   return (
 
 
     <div className="App">
       <Divider><h3>TO DO LIST</h3></Divider>
 
-      <Divider orientation="right" plain>
-        <div style={{ width: "100px" }}>
-          <Row justify="space-between">
-            <Link to='./login'>Log In</Link>
-            <Link to='./register'>Sign Up</Link>
-          </Row>
-        </div>
-      </Divider>
+        <Divider orientation="right" plain>
+          <div style={{ width: "100px" }}>
+            <Row justify="space-between">
+              <Link to='./login'>Log In</Link>
+              <Link to='./register'>Sign Up</Link>
+            </Row>
+          </div>
+        </Divider>
 
       <Routes>
         <Route path="/" element={<Main
@@ -163,45 +177,9 @@ function App() {
         pageSize={todosPerPage}
         />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register" element={<Register addUser={addUser}/>} />
 
       </Routes>
-
-
-      {/* <main>
-        <div className="wrapper">
-          <div style={{ marginBottom: "1em" }}>
-            <ToDoForm // Here input to create new task 
-              addTask={addTask}
-            />
-          </div>
-
-          <div style={{ marginBottom: "1em" }}>
-            <Sort // sorting
-              sortByStatus={sortByStatus}
-              sortByDate={sortByDate}
-            />
-          </div>
-          <TaskList // list of tasks
-            filteredTodos={filteredTodos}
-            changeTask={changeTask}
-            deleteTask={deleteTask}
-          />
-        </div>
-
-        <Row justify="center">
-          <Pagination // pagination
-            defaultCurrent={1}
-            total={todosCount}
-            onChange={paginate}
-            hideOnSinglePage={true}
-            current={currentPage}
-            pageSize={todosPerPage}
-          />
-        </Row>
-      </main> */}
-
-      {/* <Login></Login> */}
 
     </div >
   );
