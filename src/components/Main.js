@@ -18,15 +18,6 @@ function Main({addTask,
     pageSize, 
     onChange
 }) {
-
-    if(total > 0){
-        console.log(total);
-    }
-
-    if(total == undefined){
-        console.log("Hello >>> total >>>", total);
-    }
-
     return (
     <div>
         <main>
